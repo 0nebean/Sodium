@@ -27,12 +27,13 @@ public class TenantInfoServiceImpl extends BaseBiz<TenantInfo, TenantInfoDao> im
     private static final Logger logger = LoggerFactory.getLogger(TenantInfoServiceImpl.class);
 
 
-    private static final String TEMPLATE_FILE = "templates-customer/vm/tenant/initTenantInfo.ftl";
+    private static final String TEMPLATE_FILE = "tenant/initTenantInfo.ftl";
 
 
 
     @Override
     public void initTenantInfoTableAndFunctionBySql(String tenantId) {
+        logger.info("started init tenant into database table");
         if (StringUtils.isEmpty(baseDao.isExistTenantInfo(tenantId))){
             //根据生成模板生成sql语句
             String sqlStr = mergeTemplate(tenantId);
@@ -49,10 +50,9 @@ public class TenantInfoServiceImpl extends BaseBiz<TenantInfo, TenantInfoDao> im
      * @return sql
      */
     private String mergeTemplate(String tenantId) {
-        String templateFile = PropUtil.getInstance().getConfig(TEMPLATE_FILE, PropUtil.DEFLAULT_NAME_SPACE);
         JSONObject param = new JSONObject();
         param.put("tenantId",tenantId);
-        return FreeMarkerTemplateUtils.generateStringFromFreeMarker(param,templateFile);
+        return FreeMarkerTemplateUtils.generateStringFromFreeMarker(param,TEMPLATE_FILE);
     }
 
     @Override

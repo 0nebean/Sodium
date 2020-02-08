@@ -9,7 +9,9 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.stereotype.Service;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * 自定义实现的security拦截器,指定了权限校验规则类 MyAccessDecisionManager
@@ -42,6 +44,8 @@ public class OneBeanFilterSecurityInterceptor extends AbstractSecurityIntercepto
 
 
     public void invoke(FilterInvocation fi) throws IOException, ServletException {
+        String uri = Optional.of(fi).map(FilterInvocation::getHttpRequest).map(HttpServletRequest::getRequestURI).orElse("");
+        logger.debug("OneBeanFilterSecurityInterceptor invoke method,get request uri = " + uri);
         InterceptorStatusToken token = super.beforeInvocation(fi);
         try {
             //执行下一个拦截器

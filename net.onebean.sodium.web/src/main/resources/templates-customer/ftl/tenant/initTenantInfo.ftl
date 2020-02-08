@@ -101,7 +101,6 @@ CREATE TABLE `sys_role_user_${tenantId}` (
 `operator_id` int(11) DEFAULT NULL COMMENT '操作人ID',
 `operator_name` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '操作人姓名',
 PRIMARY KEY (`id`),
-UNIQUE KEY `uid_rid_index` (`sys_user_id`,`sys_role_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 

@@ -28,7 +28,7 @@ public class OneBeanInvocationSecurityMetadataSourceService implements FilterInv
     @Autowired
     private SysPermissionService sysPermissionService;
 
-    private HashMap<String, Collection<ConfigAttribute>> map =null;
+    private HashMap<String, Collection<ConfigAttribute>> map = null;
 
     /**
      * 加载资源，初始化资源变量
@@ -49,22 +49,42 @@ public class OneBeanInvocationSecurityMetadataSourceService implements FilterInv
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
-        if(map ==null) loadResourceDefine();
         HttpServletRequest request = ((FilterInvocation) object).getHttpRequest();
-        AntPathRequestMatcher matcher;
-        String resUrl;
-        for(Iterator<String> iter = map.keySet().iterator(); iter.hasNext(); ) {
-            resUrl = iter.next();
-            if (StringUtils.isEmpty(resUrl)){
-                //如果url为空 不加载该url资源
-                return null;
-            }
-            matcher = new AntPathRequestMatcher(resUrl);
-            if(matcher.matches(request)) {
-                return map.get(resUrl);
+        if(map == null && isUnSecuredUrls(request)){
+            loadResourceDefine();
+        }else if(map != null && map.size() > 0){
+            AntPathRequestMatcher matcher;
+            String resUrl;
+            for(Iterator<String> iter = map.keySet().iterator(); iter.hasNext(); ) {
+                resUrl = iter.next();
+                if (StringUtils.isEmpty(resUrl)){
+                    //如果url为空 不加载该url资源
+                    return null;
+                }
+                matcher = new AntPathRequestMatcher(resUrl);
+                if(matcher.matches(request)) {
+                    return map.get(resUrl);
+                }
             }
         }
         return null;
+    }
+
+    /**
+     * 是否白名单url
+     * @param request req
+     * @return bool
+     */
+    private Boolean isUnSecuredUrls(HttpServletRequest request){
+        String[] unSecuredUrls = OneBeanAccessWhiteList.unSecuredUrls;
+        AntPathRequestMatcher matcher;
+        for (String s : unSecuredUrls) {
+            matcher = new AntPathRequestMatcher(s);
+            if(matcher.matches(request)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
