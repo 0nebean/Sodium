@@ -5,9 +5,6 @@ import net.onebean.core.extend.ApolloConfInitializer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
-import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Component;
@@ -40,9 +37,6 @@ import org.springframework.stereotype.Service;
 		})
 @SpringBootApplication(exclude= {DataSourceAutoConfiguration.class})
 @EnableApolloConfig
-@EnableDiscoveryClient
-@EnableHystrix
-@EnableFeignClients(basePackages = "net.onebean.*.**.api.**")
 public class Main {
 
 	public static void main(String[] args) {
